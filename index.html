@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Sōzō · Ventes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage:#7C9070;--sage-light:#EAF0E6;--terra:#C4714A;--terra-light:#F5E9E2;
+    --ink:#2A2520;--ink-soft:#6B6258;--paper:#FDFAF6;--border:#E8E0D5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+  header{background:var(--ink);color:var(--paper);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+  header h1{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;letter-spacing:.02em;}
+  header h1 span{color:var(--terra);font-style:italic;}
+  .header-right{display:flex;align-items:center;gap:12px;}
+  .sync-status{font-size:.72rem;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:5px;}
+  .sync-dot{width:6px;height:6px;border-radius:50%;background:#666;}
+  .sync-dot.ok{background:#7C9070;}
+  .sync-dot.loading{background:#F57F17;animation:pulse 1s infinite;}
+  .sync-dot.error{background:#e57373;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .header-tabs{display:flex;gap:4px;}
+  .tab-btn{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);padding:7px 15px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;transition:all .2s;}
+  .tab-btn.active{background:var(--terra);border-color:var(--terra);color:#fff;}
+  .tab-btn:hover:not(.active){border-color:rgba(255,255,255,.5);color:#fff;}
+  .app{max-width:1100px;margin:0 auto;padding:26px 18px;}
+  .panels{display:none;}.panels.active{display:block;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:16px;}
+  .card-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:16px;padding-bottom:11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+  .card-title .dot{width:7px;height:7px;border-radius:50%;background:var(--terra);flex-shrink:0;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .form-grid.three{grid-template-columns:1fr 1fr 1fr;}
+  .form-grid.four{grid-template-columns:1fr 1fr 1fr 1fr;}
+  .form-group{display:flex;flex-direction:column;gap:5px;}
+  label{font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);}
+  select,input[type=text],input[type=number],input[type=date]{border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:.87rem;color:var(--ink);background:var(--paper);transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6258' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+  select:focus,input:focus{outline:none;border-color:var(--sage);}
+  select:disabled{opacity:.4;cursor:not-allowed;}
+  .btn-add{background:var(--terra);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-family:'DM Sans',sans-serif;font-size:.87rem;font-weight:500;cursor:pointer;transition:background .2s,transform .1s;margin-top:5px;}
+  .btn-add:hover{background:#b5603e;}.btn-add:active{transform:scale(.98);}
+  .btn-add:disabled{background:#ccc;cursor:not-allowed;}
+  .btn-secondary{background:transparent;color:var(--ink-soft);border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:.81rem;cursor:pointer;transition:all .2s;margin-top:5px;}
+  .btn-secondary:hover{border-color:var(--ink-soft);color:var(--ink);}
+  .btn-sm{background:transparent;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;color:var(--ink-soft);transition:all .2s;}
+  .btn-sm:hover{border-color:var(--terra);color:var(--terra);}
+  .flash{display:none;border-radius:8px;padding:10px 13px;font-size:.82rem;font-weight:500;margin-top:12px;align-items:center;gap:8px;}
+  .flash.show{display:flex;}
+  .flash.success{background:var(--sage-light);border:1px solid var(--sage);color:var(--sage);}
+  .flash.error{background:#FDECEA;border:1px solid #e57373;color:#c62828;}
+
+  .panier{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:14px;margin:14px 0;}
+  .panier-title{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:10px;}
+  .panier-ligne{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
+  .panier-ligne:last-child{border-bottom:none;}
+  .panier-info{flex:1;color:var(--ink);}
+  .panier-info small{color:var(--ink-soft);font-size:.75rem;}
+  .panier-prix{font-weight:500;color:var(--terra);min-width:60px;text-align:right;}
+  .panier-empty{font-size:.82rem;color:var(--ink-soft);text-align:center;padding:10px;}
+  .btn-del-ligne{background:none;border:none;color:#ccc;cursor:pointer;font-size:.85rem;padding:3px;transition:color .2s;}
+  .btn-del-ligne:hover{color:#e57373;}
+  .panier-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;margin-top:6px;border-top:2px solid var(--border);font-weight:500;}
+  .panier-total-val{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--terra);}
+
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  thead tr{border-bottom:2px solid var(--border);}
+  th{text-align:left;padding:8px 9px;font-size:.67rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);white-space:nowrap;}
+  td{padding:9px 9px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--paper);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.69rem;font-weight:500;white-space:nowrap;}
+  .badge-shopify{background:#E3F1E8;color:#2E7D4F;}
+  .badge-revendeur{background:#E8EAF6;color:#3949AB;}
+  .badge-evenement{background:var(--terra-light);color:var(--terra);}
+  .badge-custom{background:#FFF8E1;color:#F57F17;}
+  .badge-marketplace{background:#F3E5F5;color:#6A1B9A;}
+  .empty{text-align:center;padding:38px 20px;color:var(--ink-soft);}
+  .empty-icon{font-size:1.8rem;margin-bottom:8px;}
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px;}
+  .filters select,.filters input{font-size:.79rem;padding:7px 10px;min-width:125px;}
+
+  .stats-header{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:flex-end;gap:11px;flex-wrap:wrap;}
+  .stats-header .form-group{min-width:125px;}
+  .btn-reset{background:none;border:none;color:var(--ink-soft);font-size:.77rem;cursor:pointer;padding:9px 0;text-decoration:underline;font-family:'DM Sans',sans-serif;}
+  .btn-reset:hover{color:var(--terra);}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:16px;}
+  .stat-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+  .stat-card .stat-val{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:600;color:var(--terra);line-height:1;margin-bottom:4px;}
+  .stat-card .stat-lbl{font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:500;}
+  .stat-card .stat-sub{font-size:.65rem;color:var(--ink-soft);margin-top:3px;}
+  .stats-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .chart-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+  .chart-label{min-width:105px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.77rem;}
+  .chart-bar-bg{flex:1;height:8px;background:var(--border);border-radius:5px;overflow:hidden;}
+  .chart-bar-fill{height:100%;border-radius:5px;transition:width .6s ease;}
+  .chart-count{min-width:26px;text-align:right;font-weight:500;color:var(--ink);font-size:.77rem;}
+  .chart-empty{font-size:.81rem;color:var(--ink-soft);padding:7px 0;}
+  .top-list{list-style:none;}
+  .top-list li{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.83rem;gap:7px;}
+  .top-list li:last-child{border-bottom:none;}
+  .rank{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:600;color:var(--terra);min-width:20px;}
+  .top-name{flex:1;}.top-count{font-weight:500;color:var(--sage);font-size:.77rem;white-space:nowrap;}
+  .decision{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+  .decision-keep{background:#E3F1E8;color:#2E7D4F;}
+  .decision-watch{background:#FFF8E1;color:#F57F17;}
+  .decision-stop{background:#FDECEA;color:#c62828;}
+  .coll-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px;}
+  .coll-tab{background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:.77rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .coll-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .coll-detail-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.81rem;}
+  .coll-detail-row:last-child{border-bottom:none;}
+  .coll-detail-name{color:var(--ink);flex:1;}
+  .coll-detail-bar-wrap{flex:2;margin:0 11px;}
+  .coll-detail-count{color:var(--terra);font-weight:500;min-width:50px;text-align:right;font-size:.77rem;}
+  .month-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;margin-top:8px;}
+  .month-cell{text-align:center;}
+  .month-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .month-bar-bg{width:100%;height:60px;background:var(--border);border-radius:4px;display:flex;align-items:flex-end;overflow:hidden;}
+  .month-bar-fill{width:100%;background:var(--sage);border-radius:4px;transition:height .5s ease;}
+  .month-label{font-size:.59rem;color:var(--ink-soft);text-transform:uppercase;}
+  .month-count{font-size:.67rem;font-weight:500;color:var(--ink);min-height:13px;}
+
+  .cat-section{margin-bottom:16px;}
+  .cat-section-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:500;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+  .cat-items{display:flex;flex-wrap:wrap;gap:5px;}
+  .cat-tag{background:var(--paper);border:1px solid var(--border);border-radius:6px;padding:4px 9px;font-size:.79rem;display:flex;align-items:center;gap:5px;}
+  .cat-tag .cat-name{color:var(--ink);}.cat-tag .cat-col{color:var(--ink-soft);font-size:.71rem;}
+  .btn-cat-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:.73rem;padding:0;line-height:1;transition:color .2s;}
+  .btn-cat-del:hover{color:#e57373;}
+  .inline-form{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-top:11px;}
+  .inline-form .form-group{min-width:125px;}
+
+  .loading-overlay{display:none;position:fixed;inset:0;background:rgba(253,250,246,.8);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+  .loading-overlay.show{display:flex;}
+  .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--terra);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-txt{font-size:.85rem;color:var(--ink-soft);}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:#fff;border-radius:14px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+  .modal h3{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:11px;}
+  .modal-actions{display:flex;gap:9px;margin-top:16px;justify-content:flex-end;}
+
+  @media(max-width:640px){
+    .form-grid,.form-grid.three,.form-grid.four{grid-template-columns:1fr;}
+    .stats-grid{grid-template-columns:1fr 1fr;}.stats-two{grid-template-columns:1fr;}
+    .tab-btn{padding:5px 9px;font-size:.69rem;}header h1{font-size:.92rem;}
+    .month-grid{grid-template-columns:repeat(6,1fr);}
+    .header-right{gap:6px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-txt" id="loading-txt">Chargement...</div>
+</div>
+
+<header>
+  <h1>Studio <span>Sōzō</span> · Ventes</h1>
+  <div class="header-right">
+    <div class="sync-status">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-label">Notion</span>
+    </div>
+    <div class="header-tabs">
+      <button class="tab-btn active" onclick="showTab('saisie',this)">Saisir</button>
+      <button class="tab-btn" onclick="showTab('historique',this)">Historique</button>
+      <button class="tab-btn" onclick="showTab('stats',this)">Stats</button>
+      <button class="tab-btn" onclick="showTab('catalogue',this)">Catalogue</button>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- SAISIE -->
+  <div class="panels active" id="panel-saisie">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Nouvelle commande</div>
+      <div class="form-grid" style="margin-bottom:13px">
+        <div class="form-group"><label>Date</label><input type="date" id="v-date"></div>
+        <div class="form-group"><label>Canal</label>
+          <select id="v-canal" onchange="onCanalChange()">
+            <option value="">Choisir</option>
+            <option value="Shopify">Shopify</option>
+            <option value="Marketplace">Marketplace</option>
+            <option value="Revendeur">Revendeur</option>
+            <option value="Evenement">Événement</option>
+            <option value="Custom">Commande custom</option>
+          </select>
+        </div>
+      </div>
+      <div id="sous-canal-wrap" style="margin-bottom:13px;display:none">
+        <div class="form-grid">
+          <div class="form-group" id="marketplace-group" style="display:none"><label>Plateforme</label>
+            <input type="text" id="v-marketplace" placeholder="Ex : Etsy, Faire...">
+          </div>
+          <div class="form-group" id="revendeur-group" style="display:none"><label>Revendeur</label>
+            <select id="v-revendeur" onchange="onRevendeurChange()"><option value="">Choisir</option></select>
+          </div>
+          <div class="form-group" id="type-revendeur-group" style="display:none"><label>Type</label>
+            <select id="v-type-revendeur"><option value="achat-revente">Achat-revente</option><option value="depot-vente">Dépôt-vente</option></select>
+          </div>
+          <div class="form-group" id="evenement-group" style="display:none"><label>Événement</label>
+            <select id="v-evenement"><option value="">Choisir</option></select>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:13px;">
+        <div style="font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:11px">Ajouter une référence</div>
+        <div class="form-grid four" style="margin-bottom:11px">
+          <div class="form-group"><label>Type de bijou</label>
+            <select id="v-type">
+              <option value="">Choisir</option>
+              <option>Boucles oreilles</option>
+              <option>Collier</option><option>Bracelet</option>
+              <option>Bague</option><option>Accessoire</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Collection</label>
+            <select id="v-collection" onchange="onCollectionChange()"><option value="">Choisir</option></select>
+          </div>
+          <div class="form-group"><label>Modèle</label>
+            <select id="v-modele" onchange="onModeleChange()" disabled><option value="">Choisir la collection</option></select>
+          </div>
+          <div class="form-group"><label>Coloris</label>
+            <select id="v-coloris" disabled><option value="">—</option></select>
+          </div>
+        </div>
+        <div class="form-grid" style="margin-bottom:11px">
+          <div class="form-group"><label>Quantité</label><input type="number" id="v-qte" value="1" min="1"></div>
+          <div class="form-group"><label>Prix unitaire (€ que tu touches)</label><input type="number" id="v-prix" placeholder="Ex : 21" min="0" step="0.01"></div>
+        </div>
+        <button class="btn-sm" onclick="ajouterLignePanier()">+ Ajouter au panier</button>
+      </div>
+      <div class="panier">
+        <div class="panier-title">Panier de la commande</div>
+        <div id="panier-lignes"><div class="panier-empty">Aucune référence ajoutée</div></div>
+        <div class="panier-total" id="panier-total" style="display:none">
+          <span style="font-size:.82rem;color:var(--ink-soft)">Total commande</span>
+          <span class="panier-total-val" id="panier-total-val">0 €</span>
+        </div>
+      </div>
+      <button class="btn-add" id="btn-valider" onclick="validerCommande()">Enregistrer dans Notion</button>
+      <div class="flash" id="flash-vente"></div>
+    </div>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="panels" id="panel-historique">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Historique des ventes
+        <button class="btn-sm" style="margin-left:auto;margin-top:0" onclick="chargerVentes()">↻ Actualiser</button>
+      </div>
+      <div class="filters">
+        <select id="f-canal" onchange="renderTable()">
+          <option value="">Tous les canaux</option>
+          <option value="Shopify">Shopify</option><option value="Marketplace">Marketplace</option>
+          <option value="Revendeur">Revendeur</option><option value="Evenement">Événement</option><option value="Custom">Custom</option>
+        </select>
+        <select id="f-collection" onchange="renderTable()"><option value="">Toutes les collections</option></select>
+        <select id="f-type" onchange="renderTable()">
+          <option value="">Tous les types</option>
+          <option>Boucles oreilles</option><option>Collier</option>
+          <option>Bracelet</option><option>Bague</option><option>Accessoire</option>
+        </select>
+        <input type="text" id="f-search" placeholder="Rechercher..." oninput="renderTable()" style="min-width:130px">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Canal</th><th>Sous-canal</th><th>Type</th>
+            <th>Collection</th><th>Modèle</th><th>Coloris</th>
+            <th>Qté</th><th>Prix u.</th><th>Total</th>
+          </tr></thead>
+          <tbody id="ventes-tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty-state" style="display:none"><div class="empty-icon">🪩</div><p>Aucune vente pour cette sélection.</p></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="panels" id="panel-stats">
+    <div class="stats-header">
+      <div class="form-group"><label>Du</label><input type="date" id="s-debut" onchange="renderStats()"></div>
+      <div class="form-group"><label>Au</label><input type="date" id="s-fin" onchange="renderStats()"></div>
+      <div class="form-group"><label>Canal</label>
+        <select id="s-canal" onchange="renderStats()">
+          <option value="">Tous</option>
+          <option value="Shopify">Shopify</option><option value="Marketplace">Marketplace</option>
+          <option value="Revendeur">Revendeur</option><option value="Evenement">Événement</option><option value="Custom">Custom</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Raccourcis</label>
+        <select onchange="applyShortcut(this.value);this.value=''">
+          <option value="">Période rapide</option>
+          <option value="2021">2021</option><option value="2022">2022</option>
+          <option value="2023">2023</option><option value="2024">2024</option>
+          <option value="2025">2025</option><option value="2026">2026</option>
+          <option value="12m">12 derniers mois</option>
+          <option value="6m">6 derniers mois</option>
+          <option value="3m">3 derniers mois</option>
+        </select>
+      </div>
+      <button class="btn-reset" onclick="resetPeriode()">Tout afficher</button>
+    </div>
+    <div class="stats-grid" id="stats-cards"></div>
+    <div class="stats-two">
+      <div class="card"><div class="card-title"><span class="dot"></span> Par type de bijou</div><div id="chart-types"></div></div>
+      <div class="card"><div class="card-title"><span class="dot"></span> Par canal de vente</div><div id="chart-canaux"></div></div>
+    </div>
+    <div class="stats-two">
+      <div class="card"><div class="card-title"><span class="dot"></span> Top pièces vendues</div><ul class="top-list" id="top-pieces"></ul></div>
+      <div class="card">
+        <div class="card-title"><span class="dot"></span> Décisions catalogue</div>
+        <p style="font-size:.74rem;color:var(--ink-soft);margin-bottom:11px">Basé sur le volume de ventes par référence.</p>
+        <div id="decisions-list"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Détail collections permanentes</div>
+      <div class="coll-tabs" id="coll-tabs"></div>
+      <div id="coll-detail-content"></div>
+    </div>
+    <div class="stats-two">
+      <div class="card"><div class="card-title"><span class="dot"></span> Par événement</div><div id="chart-evenements"></div></div>
+      <div class="card"><div class="card-title"><span class="dot"></span> Par revendeur</div><div id="chart-revendeurs"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Saisonnalité (pièces par mois)</div>
+      <div class="month-grid" id="chart-mois"></div>
+    </div>
+  </div>
+
+  <!-- CATALOGUE -->
+  <div class="panels" id="panel-catalogue">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Collections et bijoux</div>
+      <div id="cat-collections-list"></div>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="font-size:.72rem;font-weight:500;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px">Ajouter un bijou</div>
+        <div class="inline-form">
+          <div class="form-group"><label>Collection existante</label><select id="cat-coll-select"><option value="">Choisir</option></select></div>
+          <div class="form-group"><label>Ou nouvelle collection</label><input type="text" id="cat-new-coll" placeholder="Nom..."></div>
+          <div class="form-group"><label>Modèle</label><input type="text" id="cat-modele" placeholder="Ex : manchette"></div>
+          <div class="form-group"><label>Coloris (optionnel)</label><input type="text" id="cat-coloris" placeholder="Ex : bleu"></div>
+          <button class="btn-add" onclick="ajouterBijou()">Ajouter</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Collections permanentes</div>
+      <p style="font-size:.81rem;color:var(--ink-soft);margin-bottom:11px">Ces collections affichent le détail par coloris dans les stats.</p>
+      <div id="cat-perma-list" class="cat-items" style="margin-bottom:9px"></div>
+      <div class="inline-form">
+        <div class="form-group"><label>Collection</label><select id="cat-perma-select"><option value="">Choisir</option></select></div>
+        <button class="btn-add" onclick="ajouterPerma()">Marquer comme permanente</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Revendeurs</div>
+      <div id="cat-revendeurs-list" class="cat-items" style="margin-bottom:9px"></div>
+      <div class="inline-form">
+        <div class="form-group"><label>Nom</label><input type="text" id="cat-new-revendeur" placeholder="Ex : Vichy Mon Amour"></div>
+        <button class="btn-add" onclick="ajouterRevendeur()">Ajouter</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Événements</div>
+      <div id="cat-evenements-list" class="cat-items" style="margin-bottom:9px"></div>
+      <div class="inline-form">
+        <div class="form-group"><label>Nom</label><input type="text" id="cat-new-event" placeholder="Ex : En Mode Festi 2025"></div>
+        <button class="btn-add" onclick="ajouterEvenement()">Ajouter</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span> Sauvegarde locale</div>
+      <p style="font-size:.81rem;color:var(--ink-soft);margin-bottom:13px">Les ventes sont dans Notion. Le catalogue (collections, revendeurs, événements) est sauvegardé localement ici.</p>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">
+        <button class="btn-secondary" onclick="exportJSON()">Sauvegarder catalogue (JSON)</button>
+        <button class="btn-secondary" onclick="document.getElementById('import-json').click()">Restaurer catalogue</button>
+        <input type="file" id="import-json" accept=".json" style="display:none" onchange="importJSON(event)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-del">
+  <div class="modal">
+    <h3>Supprimer cette ligne ?</h3>
+    <p style="font-size:.84rem;color:var(--ink-soft)">Cette action est irréversible.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Annuler</button>
+      <button class="btn-add" onclick="confirmDelete()" style="background:#e57373;margin-top:0">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG NOTION
+// ═══════════════════════════════════════
+const NOTION_DB_ID = '168e2970-0c97-48c0-9f2f-4a09b233653b';
+const NOTION_DS_ID = '168e2970-0c97-48c0-9f2f-4a09b233653b';
+
+// ═══════════════════════════════════════
+// ÉTAT LOCAL (catalogue uniquement)
+// ═══════════════════════════════════════
+const STORAGE_KEY = 'sozo-catalogue-v1';
+let catalogue = {
+  bijoux: {},
+  revendeurs: ['Vichy Mon Amour','SPL Vichy Destinations'],
+  evenements: ['En Mode Festi 2025','Festival Alice 2025'],
+  collectionsPerma: []
+};
+let ventesNotion = []; // données chargées depuis Notion
+let panier = [];
+let deleteIndex = null;
+let activeCollTab = null;
+
+const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const CANAL_BADGE = {Shopify:'badge-shopify',Marketplace:'badge-marketplace',Revendeur:'badge-revendeur',Evenement:'badge-evenement',Custom:'badge-custom'};
+const CANAUX_DIRECTS = ['Shopify','Marketplace','Evenement','Custom'];
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function init() {
+  const s = localStorage.getItem(STORAGE_KEY);
+  if (s) { try { catalogue = {...catalogue,...JSON.parse(s)}; } catch(e){} }
+  if (!catalogue.bijoux || !Object.keys(catalogue.bijoux).length) {
+    catalogue.bijoux = {
+      'Un été à Vichy':[{modele:'Manchette',coloris:'Bleu'},{modele:'Manchette',coloris:'Rose'},{modele:'Manchette',coloris:'Vert'},{modele:'Manchette',coloris:'Orange'},{modele:'Créoles',coloris:'Bleu'},{modele:'Créoles',coloris:'Rose'},{modele:'Créoles',coloris:'Vert'},{modele:'Créoles',coloris:'Orange'}],
+      'Voyage au Japon':[{modele:'Boucles pendantes',coloris:'Rouge'},{modele:'Boucles pendantes',coloris:'Blanc'},{modele:'Collier',coloris:'Rouge'},{modele:'Collier',coloris:'Blanc'},{modele:'Bracelet',coloris:'Rouge'},{modele:'Bracelet',coloris:'Blanc'}],
+      'Léopard':[{modele:'Manchette',coloris:''}],
+      'Graou':[{modele:'Boucles pendantes',coloris:''},{modele:'Collier',coloris:''}]
+    };
+    catalogue.collectionsPerma = ['Un été à Vichy','Voyage au Japon'];
+  }
+  document.getElementById('v-date').valueAsDate = new Date();
+  refreshCatalogue();
+  await chargerVentes();
+}
+
+function saveCatalogue() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(catalogue));
+}
+
+function setSyncStatus(state, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = label;
+}
+
+function showLoading(txt) {
+  document.getElementById('loading-txt').textContent = txt || 'Chargement...';
+  document.getElementById('loading').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('show');
+}
+
+// ═══════════════════════════════════════
+// NOTION API via Anthropic
+// ═══════════════════════════════════════
+async function callClaude(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      mcp_servers: [{
+        type: 'url',
+        url: 'https://mcp.notion.com/mcp',
+        name: 'notion-mcp'
+      }],
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) throw new Error('Erreur API');
+  return await res.json();
+}
+
+async function chargerVentes() {
+  setSyncStatus('loading', 'Chargement...');
+  showLoading('Chargement des ventes depuis Notion...');
+  try {
+    const data = await callClaude(
+      `Fetch all pages from the Notion database with ID ${NOTION_DB_ID}. 
+      Return ONLY a JSON array of objects with these exact fields: date, canal, sousCanal, typeRevendeur, typeBijou, collection, modele, coloris, qte, prix.
+      Map: Date→date (YYYY-MM-DD), Canal→canal, Sous-canal→sousCanal, Type revendeur→typeRevendeur, Type de bijou→typeBijou, Collection→collection, Modele→modele, Coloris→coloris, Quantite→qte (number), Prix unitaire→prix (number).
+      Return ONLY the JSON array, no other text.`
+    );
+    const text = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    const clean = text.replace(/```json|```/g,'').trim();
+    const startIdx = clean.indexOf('[');
+    const endIdx = clean.lastIndexOf(']');
+    if (startIdx !== -1 && endIdx !== -1) {
+      ventesNotion = JSON.parse(clean.slice(startIdx, endIdx+1));
+    }
+    setSyncStatus('ok', 'Notion ✓');
+    renderTable();
+  } catch(e) {
+    setSyncStatus('error', 'Erreur sync');
+    console.error(e);
+  }
+  hideLoading();
+}
+
+async function envoyerVenteNotion(vente) {
+  const prompt = `Create a new page in the Notion database with ID ${NOTION_DB_ID} with these property values:
+  - Vente (title): "${vente.collection} · ${vente.modele}${vente.coloris?' · '+vente.coloris:''}"
+  - Date: "${vente.date}"
+  - Canal: "${vente.canal}"
+  - Sous-canal: "${vente.sousCanal||''}"
+  - Type revendeur: "${vente.typeRevendeur||''}"
+  - Type de bijou: "${vente.typeBijou||''}"
+  - Collection: "${vente.collection}"
+  - Modele: "${vente.modele}"
+  - Coloris: "${vente.coloris||''}"
+  - Quantite: ${vente.qte}
+  - Prix unitaire: ${vente.prix}
+  Confirm creation with "OK" when done.`;
+  return await callClaude(prompt);
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showTab(tab, btn) {
+  document.querySelectorAll('.panels').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if (tab==='stats') renderStats();
+  if (tab==='historique') renderTable();
+}
+
+// ═══════════════════════════════════════
+// SELECTS
+// ═══════════════════════════════════════
+function refreshCatalogue() {
+  populateColSelects(); populateRevendeurSelect(); populateEvenementSelect();
+  renderCatalogue();
+}
+
+function populateColSelects() {
+  const colls = Object.keys(catalogue.bijoux).sort();
+  ['v-collection','cat-coll-select','cat-perma-select'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const v=el.value;
+    el.innerHTML='<option value="">Choisir</option>';
+    colls.forEach(c=>el.innerHTML+=`<option value="${c}">${c}</option>`);
+    if(v) el.value=v;
+  });
+  const fc=document.getElementById('f-collection');
+  if(fc){const v=fc.value;fc.innerHTML='<option value="">Toutes les collections</option>';colls.forEach(c=>fc.innerHTML+=`<option value="${c}">${c}</option>`);if(v)fc.value=v;}
+}
+
+function onCollectionChange() {
+  const coll=document.getElementById('v-collection').value;
+  const me=document.getElementById('v-modele'),ce=document.getElementById('v-coloris');
+  me.innerHTML='<option value="">Choisir</option>';ce.innerHTML='<option value="">—</option>';ce.disabled=true;
+  if(!coll||!catalogue.bijoux[coll]){me.disabled=true;return;}
+  me.disabled=false;
+  [...new Set(catalogue.bijoux[coll].map(b=>b.modele))].forEach(m=>me.innerHTML+=`<option value="${m}">${m}</option>`);
+}
+
+function onModeleChange() {
+  const coll=document.getElementById('v-collection').value,mod=document.getElementById('v-modele').value;
+  const ce=document.getElementById('v-coloris');
+  ce.innerHTML='<option value="">—</option>';
+  if(!coll||!mod){ce.disabled=true;return;}
+  const cols=catalogue.bijoux[coll].filter(b=>b.modele===mod&&b.coloris).map(b=>b.coloris);
+  if(!cols.length){ce.disabled=true;return;}
+  ce.disabled=false;cols.forEach(c=>ce.innerHTML+=`<option value="${c}">${c}</option>`);
+}
+
+function onCanalChange() {
+  const c=document.getElementById('v-canal').value;
+  document.getElementById('sous-canal-wrap').style.display=(c==='Revendeur'||c==='Evenement'||c==='Marketplace')?'block':'none';
+  document.getElementById('marketplace-group').style.display=c==='Marketplace'?'block':'none';
+  document.getElementById('revendeur-group').style.display=c==='Revendeur'?'block':'none';
+  document.getElementById('type-revendeur-group').style.display='none';
+  document.getElementById('evenement-group').style.display=c==='Evenement'?'block':'none';
+}
+function onRevendeurChange() {
+  document.getElementById('type-revendeur-group').style.display=document.getElementById('v-revendeur').value?'block':'none';
+}
+function populateRevendeurSelect() {
+  const el=document.getElementById('v-revendeur');el.innerHTML='<option value="">Choisir</option>';
+  catalogue.revendeurs.forEach(r=>el.innerHTML+=`<option value="${r}">${r}</option>`);
+}
+function populateEvenementSelect() {
+  const el=document.getElementById('v-evenement');el.innerHTML='<option value="">Choisir</option>';
+  catalogue.evenements.forEach(e=>el.innerHTML+=`<option value="${e}">${e}</option>`);
+}
+
+// ═══════════════════════════════════════
+// PANIER
+// ═══════════════════════════════════════
+function ajouterLignePanier() {
+  const collection=document.getElementById('v-collection').value;
+  const modele=document.getElementById('v-modele').value;
+  if(!collection||!modele){alert('Collection et modèle requis.');return;}
+  panier.push({
+    typeBijou:document.getElementById('v-type').value,
+    collection,modele,
+    coloris:document.getElementById('v-coloris').value,
+    qte:parseInt(document.getElementById('v-qte').value)||1,
+    prix:parseFloat(document.getElementById('v-prix').value)||0
+  });
+  renderPanier();
+  document.getElementById('v-collection').value='';
+  document.getElementById('v-modele').innerHTML='<option value="">Choisir la collection</option>';
+  document.getElementById('v-modele').disabled=true;
+  document.getElementById('v-coloris').innerHTML='<option value="">—</option>';
+  document.getElementById('v-coloris').disabled=true;
+  document.getElementById('v-qte').value=1;document.getElementById('v-prix').value='';document.getElementById('v-type').value='';
+}
+
+function renderPanier() {
+  const wrap=document.getElementById('panier-lignes'),tot=document.getElementById('panier-total'),totVal=document.getElementById('panier-total-val');
+  if(!panier.length){wrap.innerHTML='<div class="panier-empty">Aucune référence ajoutée</div>';tot.style.display='none';return;}
+  wrap.innerHTML=panier.map((l,i)=>`
+    <div class="panier-ligne">
+      <div class="panier-info"><strong>${l.collection} · ${l.modele}${l.coloris?' · '+l.coloris:''}</strong><br><small>${l.typeBijou||'Type non précisé'} · qté ${l.qte}</small></div>
+      <div class="panier-prix">${l.prix?(l.qte*l.prix).toFixed(2)+' €':'—'}</div>
+      <button class="btn-del-ligne" onclick="retirerLigne(${i})">✕</button>
+    </div>`).join('');
+  const total=panier.reduce((s,l)=>s+l.qte*l.prix,0);
+  totVal.textContent=total.toFixed(2)+' €';tot.style.display='flex';
+}
+
+function retirerLigne(i){panier.splice(i,1);renderPanier();}
+
+async function validerCommande() {
+  const canal=document.getElementById('v-canal').value;
+  const date=document.getElementById('v-date').value;
+  if(!canal){alert('Merci de choisir un canal.');return;}
+  if(!panier.length){alert('Ajoute au moins une référence au panier.');return;}
+
+  let sousCanal='',typeRevendeur='';
+  if(canal==='Revendeur'){sousCanal=document.getElementById('v-revendeur').value;typeRevendeur=document.getElementById('v-type-revendeur').value;}
+  else if(canal==='Evenement') sousCanal=document.getElementById('v-evenement').value;
+  else if(canal==='Marketplace') sousCanal=document.getElementById('v-marketplace').value;
+
+  const btn=document.getElementById('btn-valider');
+  btn.disabled=true;btn.textContent='Envoi en cours...';
+  setSyncStatus('loading','Envoi...');
+
+  const flash=document.getElementById('flash-vente');
+  flash.className='flash';flash.style.display='none';
+
+  try {
+    for (const ligne of panier) {
+      const vente={date,canal,sousCanal,typeRevendeur,...ligne};
+      await envoyerVenteNotion(vente);
+      ventesNotion.unshift(vente);
+    }
+    panier=[];renderPanier();
+    document.getElementById('v-canal').value='';
+    document.getElementById('sous-canal-wrap').style.display='none';
+    setSyncStatus('ok','Notion ✓');
+    flash.textContent='✓ Commande enregistrée dans Notion !';
+    flash.className='flash success show';
+    setTimeout(()=>flash.classList.remove('show'),3000);
+    renderTable();
+  } catch(e) {
+    setSyncStatus('error','Erreur');
+    flash.textContent='⚠ Erreur lors de l\'envoi. Réessaie.';
+    flash.className='flash error show';
+    setTimeout(()=>flash.classList.remove('show'),4000);
+  }
+  btn.disabled=false;btn.textContent='Enregistrer dans Notion';
+}
+
+// ═══════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════
+function renderTable() {
+  const fc=document.getElementById('f-canal').value,fcoll=document.getElementById('f-collection').value;
+  const ftype=document.getElementById('f-type').value,fs=(document.getElementById('f-search').value||'').toLowerCase();
+  const ventes=ventesNotion.filter(v=>{
+    if(fc&&v.canal!==fc)return false;if(fcoll&&v.collection!==fcoll)return false;
+    if(ftype&&v.typeBijou!==ftype)return false;
+    if(fs&&![v.collection,v.modele,v.coloris,v.sousCanal,v.typeBijou].join(' ').toLowerCase().includes(fs))return false;
+    return true;
+  });
+  const tbody=document.getElementById('ventes-tbody'),empty=document.getElementById('empty-state');
+  if(!ventes.length){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=ventes.map(v=>{
+    const total=(v.qte*v.prix).toFixed(2);
+    return`<tr>
+      <td>${fmt(v.date)}</td>
+      <td><span class="badge ${CANAL_BADGE[v.canal]||''}">${v.canal}</span></td>
+      <td style="color:var(--ink-soft);font-size:.77rem">${v.sousCanal||'—'}${v.typeRevendeur?' <em style="font-size:.71rem">('+v.typeRevendeur+')</em>':''}</td>
+      <td style="color:var(--ink-soft);font-size:.77rem">${v.typeBijou||'—'}</td>
+      <td>${v.collection||'—'}</td><td>${v.modele||'—'}</td>
+      <td style="color:var(--ink-soft)">${v.coloris||'—'}</td>
+      <td style="font-weight:500">${v.qte}</td>
+      <td>${v.prix?v.prix+' €':'—'}</td>
+      <td style="font-weight:500;color:var(--terra)">${v.prix?total+' €':'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function fmt(d){if(!d)return'—';try{const[y,m,j]=d.split('-');return`${j}/${m}/${y}`;}catch{return d;}}
+
+function askDelete(i){deleteIndex=i;document.getElementById('modal-del').classList.add('open');}
+function closeModal(){deleteIndex=null;document.getElementById('modal-del').classList.remove('open');}
+function confirmDelete(){closeModal();}
+
+// ═══════════════════════════════════════
+// PÉRIODE
+// ═══════════════════════════════════════
+function applyShortcut(val){
+  if(!val)return;
+  const now=new Date();let debut,fin;
+  if(['2021','2022','2023','2024','2025','2026'].includes(val)){debut=val+'-01-01';fin=val+'-12-31';}
+  else{fin=now.toISOString().split('T')[0];const d=new Date(now);if(val==='12m')d.setFullYear(d.getFullYear()-1);else if(val==='6m')d.setMonth(d.getMonth()-6);else d.setMonth(d.getMonth()-3);debut=d.toISOString().split('T')[0];}
+  document.getElementById('s-debut').value=debut;document.getElementById('s-fin').value=fin;renderStats();
+}
+function resetPeriode(){['s-debut','s-fin'].forEach(id=>document.getElementById(id).value='');document.getElementById('s-canal').value='';renderStats();}
+function getFiltered(){
+  const d=document.getElementById('s-debut').value,f=document.getElementById('s-fin').value,c=document.getElementById('s-canal').value;
+  return ventesNotion.filter(v=>{if(d&&v.date<d)return false;if(f&&v.date>f)return false;if(c&&v.canal!==c)return false;return true;});
+}
+
+// ═══════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════
+function renderStats(){
+  const ventes=getFiltered();
+  const totalPieces=ventes.reduce((s,v)=>s+(v.qte||0),0);
+  const totalCA=ventes.reduce((s,v)=>s+(v.qte||0)*(v.prix||0),0);
+  const refs=new Set(ventes.map(v=>[v.collection,v.modele,v.coloris].filter(Boolean).join('·'))).size;
+  const directes=ventes.filter(v=>CANAUX_DIRECTS.includes(v.canal));
+  const commandes={};
+  directes.forEach(v=>{const k=`${v.date}|${v.canal}|${v.sousCanal}`;commandes[k]=(commandes[k]||0)+(v.qte||0)*(v.prix||0);});
+  const vals=Object.values(commandes);
+  const avgPanier=vals.length?(vals.reduce((s,n)=>s+n,0)/vals.length).toFixed(0):0;
+  document.getElementById('stats-cards').innerHTML=`
+    <div class="stat-card"><div class="stat-val">${totalPieces}</div><div class="stat-lbl">Pièces vendues</div></div>
+    <div class="stat-card"><div class="stat-val">${totalCA.toFixed(0)} €</div><div class="stat-lbl">Chiffre d'affaires</div></div>
+    <div class="stat-card"><div class="stat-val">${refs}</div><div class="stat-lbl">Références actives</div></div>
+    <div class="stat-card"><div class="stat-val">${avgPanier} €</div><div class="stat-lbl">Panier moyen</div><div class="stat-sub">ventes directes</div></div>`;
+  const types={};ventes.forEach(v=>{if(v.typeBijou)types[v.typeBijou]=(types[v.typeBijou]||0)+(v.qte||0);});
+  renderBar('chart-types',types,'var(--sage)');
+  const canaux={};ventes.forEach(v=>{if(v.canal)canaux[v.canal]=(canaux[v.canal]||0)+(v.qte||0);});
+  renderBar('chart-canaux',canaux,'var(--terra)');
+  const pieces={};ventes.forEach(v=>{const k=[v.collection,v.modele,v.coloris].filter(Boolean).join(' · ');pieces[k]=(pieces[k]||0)+(v.qte||0);});
+  const sorted=Object.entries(pieces).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('top-pieces').innerHTML=sorted.slice(0,8).length
+    ?sorted.slice(0,8).map(([k,n],i)=>`<li><span class="rank">${i+1}</span><span class="top-name">${k}</span><span class="top-count">${n} pièce${n>1?'s':''}</span></li>`).join('')
+    :'<li style="color:var(--ink-soft);font-size:.82rem;padding:11px 0">Aucune donnée</li>';
+  renderDecisions(sorted);renderCollDetail(ventes);
+  const evts={};ventes.filter(v=>v.canal==='Evenement').forEach(v=>{const k=v.sousCanal||'Non précisé';evts[k]=(evts[k]||0)+(v.qte||0);});
+  renderBar('chart-evenements',evts,'#C4714A99');
+  const revs={};ventes.filter(v=>v.canal==='Revendeur').forEach(v=>{const k=v.sousCanal||'Non précisé';revs[k]=(revs[k]||0)+(v.qte||0);});
+  renderBar('chart-revendeurs',revs,'#7C907099');
+  const parMois=Array(12).fill(0);
+  ventes.forEach(v=>{if(v.date){try{const m=parseInt(v.date.split('-')[1])-1;parMois[m]+=(v.qte||0);}catch{}}});
+  const maxM=Math.max(...parMois,1);
+  document.getElementById('chart-mois').innerHTML=parMois.map((n,i)=>`
+    <div class="month-cell"><div class="month-bar-wrap">
+      <div class="month-count">${n||''}</div>
+      <div class="month-bar-bg"><div class="month-bar-fill" style="height:${(n/maxM*100).toFixed(0)}%"></div></div>
+      <div class="month-label">${MOIS[i]}</div>
+    </div></div>`).join('');
+}
+
+function renderBar(id,obj,color){
+  const e=Object.entries(obj).sort((a,b)=>b[1]-a[1]),max=e[0]?.[1]||1;
+  document.getElementById(id).innerHTML=e.length
+    ?e.map(([k,n])=>`<div class="chart-row"><div class="chart-label" title="${k}">${k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${(n/max*100).toFixed(0)}%;background:${color}"></div></div><div class="chart-count">${n}</div></div>`).join('')
+    :'<p class="chart-empty">Aucune donnée</p>';
+}
+
+function renderDecisions(sorted){
+  if(!sorted.length){document.getElementById('decisions-list').innerHTML='<p class="chart-empty">Aucune donnée</p>';return;}
+  const max=sorted[0][1];
+  document.getElementById('decisions-list').innerHTML=sorted.map(([k,n])=>{
+    let cls,txt;
+    if(n>=max*.5){cls='decision-keep';txt='Continuer';}
+    else if(n>=max*.2){cls='decision-watch';txt='Surveiller';}
+    else{cls='decision-stop';txt='À revoir';}
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.79rem">
+      <span style="flex:1;color:var(--ink)">${k}</span>
+      <span style="color:var(--ink-soft);margin:0 9px;font-size:.71rem">${n} vente${n>1?'s':''}</span>
+      <span class="decision ${cls}">${txt}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderCollDetail(ventes){
+  const perma=catalogue.collectionsPerma,tabs=document.getElementById('coll-tabs'),content=document.getElementById('coll-detail-content');
+  if(!perma.length){tabs.innerHTML='';content.innerHTML='<p style="font-size:.81rem;color:var(--ink-soft)">Marque tes collections permanentes dans l\'onglet Catalogue.</p>';return;}
+  if(!activeCollTab||!perma.includes(activeCollTab)) activeCollTab=perma[0];
+  tabs.innerHTML=perma.map(c=>`<button class="coll-tab ${c===activeCollTab?'active':''}" onclick="switchCollTab('${c}')">${c}</button>`).join('');
+  const vc=ventes.filter(v=>v.collection===activeCollTab);
+  const pM={},pC={};
+  vc.forEach(v=>{pM[v.modele]=(pM[v.modele]||0)+(v.qte||0);if(v.coloris)pC[v.coloris]=(pC[v.coloris]||0)+(v.qte||0);});
+  const maxM=Math.max(...Object.values(pM),1),maxC=Math.max(...Object.values(pC),1);
+  const rows=(obj,max,color)=>Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`
+    <div class="coll-detail-row"><span class="coll-detail-name">${k}</span>
+      <div class="coll-detail-bar-wrap"><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${(n/max*100).toFixed(0)}%;background:${color}"></div></div></div>
+      <span class="coll-detail-count">${n} pièce${n>1?'s':''}</span>
+    </div>`).join('');
+  content.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px">
+    <div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:500;margin-bottom:7px">Par modèle</div>${Object.keys(pM).length?rows(pM,maxM,'var(--terra)'):'<p class="chart-empty">Aucune donnée</p>'}</div>
+    <div><div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:500;margin-bottom:7px">Par coloris</div>${Object.keys(pC).length?rows(pC,maxC,'var(--sage)'):'<p class="chart-empty">Aucune donnée</p>'}</div>
+  </div>`;
+}
+function switchCollTab(c){activeCollTab=c;renderStats();}
+
+// ═══════════════════════════════════════
+// CATALOGUE
+// ═══════════════════════════════════════
+function renderCatalogue(){
+  const w=document.getElementById('cat-collections-list');
+  w.innerHTML=Object.entries(catalogue.bijoux).map(([coll,bijoux])=>{
+    const isP=catalogue.collectionsPerma.includes(coll);
+    return`<div class="cat-section"><div class="cat-section-title">${coll}${isP?' <span style="background:var(--sage-light);color:var(--sage);padding:1px 6px;border-radius:4px;font-size:.63rem;margin-left:5px">permanente</span>':''}</div>
+      <div class="cat-items">${bijoux.map((b,i)=>`<div class="cat-tag"><span class="cat-name">${b.modele}</span>${b.coloris?`<span class="cat-col">· ${b.coloris}</span>`:''}<button class="btn-cat-del" onclick="delBijou('${coll}',${i})">✕</button></div>`).join('')}</div></div>`;
+  }).join('');
+  document.getElementById('cat-revendeurs-list').innerHTML=catalogue.revendeurs.map((r,i)=>`<div class="cat-tag"><span class="cat-name">${r}</span><button class="btn-cat-del" onclick="delRevendeur(${i})">✕</button></div>`).join('');
+  document.getElementById('cat-evenements-list').innerHTML=catalogue.evenements.map((e,i)=>`<div class="cat-tag"><span class="cat-name">${e}</span><button class="btn-cat-del" onclick="delEvenement(${i})">✕</button></div>`).join('');
+  document.getElementById('cat-perma-list').innerHTML=catalogue.collectionsPerma.map((c,i)=>`<div class="cat-tag"><span class="cat-name">${c}</span><button class="btn-cat-del" onclick="delPerma(${i})">✕</button></div>`).join('');
+  populateColSelects();
+}
+
+function ajouterBijou(){let coll=document.getElementById('cat-new-coll').value.trim()||document.getElementById('cat-coll-select').value;const modele=document.getElementById('cat-modele').value.trim(),coloris=document.getElementById('cat-coloris').value.trim();if(!coll||!modele){alert('Collection et modèle requis.');return;}if(!catalogue.bijoux[coll])catalogue.bijoux[coll]=[];catalogue.bijoux[coll].push({modele,coloris});document.getElementById('cat-new-coll').value='';document.getElementById('cat-modele').value='';document.getElementById('cat-coloris').value='';saveCatalogue();renderCatalogue();populateColSelects();}
+function delBijou(coll,i){catalogue.bijoux[coll].splice(i,1);if(!catalogue.bijoux[coll].length)delete catalogue.bijoux[coll];saveCatalogue();renderCatalogue();populateColSelects();}
+function ajouterRevendeur(){const n=document.getElementById('cat-new-revendeur').value.trim();if(!n)return;catalogue.revendeurs.push(n);document.getElementById('cat-new-revendeur').value='';saveCatalogue();renderCatalogue();populateRevendeurSelect();}
+function delRevendeur(i){catalogue.revendeurs.splice(i,1);saveCatalogue();renderCatalogue();populateRevendeurSelect();}
+function ajouterEvenement(){const n=document.getElementById('cat-new-event').value.trim();if(!n)return;catalogue.evenements.push(n);document.getElementById('cat-new-event').value='';saveCatalogue();renderCatalogue();populateEvenementSelect();}
+function delEvenement(i){catalogue.evenements.splice(i,1);saveCatalogue();renderCatalogue();populateEvenementSelect();}
+function ajouterPerma(){const c=document.getElementById('cat-perma-select').value;if(!c||catalogue.collectionsPerma.includes(c))return;catalogue.collectionsPerma.push(c);saveCatalogue();renderCatalogue();}
+function delPerma(i){catalogue.collectionsPerma.splice(i,1);saveCatalogue();renderCatalogue();}
+
+function exportJSON(){dl('sozo-catalogue.json','data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(catalogue,null,2)));}
+function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{catalogue=JSON.parse(ev.target.result);saveCatalogue();refreshCatalogue();alert('Catalogue restauré !');}catch{alert('Fichier invalide.');}};r.readAsText(f);}
+function dl(name,url){const a=document.createElement('a');a.href=url;a.download=name;a.click();}
+
+init();
+</script>
+</body>
+</html>
