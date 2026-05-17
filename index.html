@@ -466,7 +466,8 @@ async function chargerVentes() {
     ventesData = raw.slice(1).filter(r => r[0] !== '').map(r => ({
       date: r[0], canal: r[1], sousCanal: r[2], typeRevendeur: r[3],
       typeBijou: r[4], collection: r[5], modele: r[6], coloris: r[7],
-      qte: parseFloat(r[8])||0, prix: parseFloat(r[9])||0,
+      qte: parseFloat(String(r[8]).replace(',','.'))||0,
+      prix: parseFloat(String(r[9]).replace(',','.'))||0,
       cmdId: r[12]||''
     }));
     setSyncStatus('ok','Google Sheets ✓');
