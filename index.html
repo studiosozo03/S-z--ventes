@@ -51,7 +51,6 @@
   .flash.show{display:flex;}
   .flash.success{background:var(--sage-light);border:1px solid var(--sage);color:var(--sage);}
   .flash.error{background:#FDECEA;border:1px solid #e57373;color:#c62828;}
-
   .panier{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:14px;margin:14px 0;}
   .panier-title{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:10px;}
   .panier-ligne{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
@@ -64,25 +63,22 @@
   .btn-del-ligne:hover{color:#e57373;}
   .panier-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;margin-top:6px;border-top:2px solid var(--border);font-weight:500;}
   .panier-total-val{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--terra);}
-
   .table-wrap{overflow-x:auto;}
   table{width:100%;border-collapse:collapse;font-size:.82rem;}
   thead tr{border-bottom:2px solid var(--border);}
   th{text-align:left;padding:8px 9px;font-size:.67rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);white-space:nowrap;}
   td{padding:9px 9px;border-bottom:1px solid var(--border);vertical-align:middle;}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:var(--paper);}
+  tbody tr:last-child td{border-bottom:none;}tbody tr:hover{background:var(--paper);}
   .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.69rem;font-weight:500;white-space:nowrap;}
-  .badge-shopify{background:#E3F1E8;color:#2E7D4F;}
-  .badge-revendeur{background:#E8EAF6;color:#3949AB;}
-  .badge-evenement{background:var(--terra-light);color:var(--terra);}
-  .badge-custom{background:#FFF8E1;color:#F57F17;}
-  .badge-marketplace{background:#F3E5F5;color:#6A1B9A;}
+  .badge-Shopify{background:#E3F1E8;color:#2E7D4F;}
+  .badge-Revendeur{background:#E8EAF6;color:#3949AB;}
+  .badge-Evenement{background:var(--terra-light);color:var(--terra);}
+  .badge-Custom{background:#FFF8E1;color:#F57F17;}
+  .badge-Marketplace{background:#F3E5F5;color:#6A1B9A;}
   .empty{text-align:center;padding:38px 20px;color:var(--ink-soft);}
-  .empty-icon{font-size:1.8rem;margin-bottom:8px;}
+  .empty-icon{font-size:1.8rem;margin-bottom:8px;}.empty p{font-size:.87rem;}
   .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px;}
   .filters select,.filters input{font-size:.79rem;padding:7px 10px;min-width:125px;}
-
   .stats-header{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:flex-end;gap:11px;flex-wrap:wrap;}
   .stats-header .form-group{min-width:125px;}
   .btn-reset{background:none;border:none;color:var(--ink-soft);font-size:.77rem;cursor:pointer;padding:9px 0;text-decoration:underline;font-family:'DM Sans',sans-serif;}
@@ -123,7 +119,6 @@
   .month-bar-fill{width:100%;background:var(--sage);border-radius:4px;transition:height .5s ease;}
   .month-label{font-size:.59rem;color:var(--ink-soft);text-transform:uppercase;}
   .month-count{font-size:.67rem;font-weight:500;color:var(--ink);min-height:13px;}
-
   .cat-section{margin-bottom:16px;}
   .cat-section-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:500;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
   .cat-items{display:flex;flex-wrap:wrap;gap:5px;}
@@ -133,25 +128,21 @@
   .btn-cat-del:hover{color:#e57373;}
   .inline-form{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-top:11px;}
   .inline-form .form-group{min-width:125px;}
-
-  .loading-overlay{display:none;position:fixed;inset:0;background:rgba(253,250,246,.8);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+  .loading-overlay{display:none;position:fixed;inset:0;background:rgba(253,250,246,.85);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
   .loading-overlay.show{display:flex;}
   .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--terra);border-radius:50%;animation:spin .8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .loading-txt{font-size:.85rem;color:var(--ink-soft);}
-
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;}
   .modal-overlay.open{display:flex;}
   .modal{background:#fff;border-radius:14px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.15);}
   .modal h3{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:11px;}
   .modal-actions{display:flex;gap:9px;margin-top:16px;justify-content:flex-end;}
-
   @media(max-width:640px){
     .form-grid,.form-grid.three,.form-grid.four{grid-template-columns:1fr;}
     .stats-grid{grid-template-columns:1fr 1fr;}.stats-two{grid-template-columns:1fr;}
     .tab-btn{padding:5px 9px;font-size:.69rem;}header h1{font-size:.92rem;}
     .month-grid{grid-template-columns:repeat(6,1fr);}
-    .header-right{gap:6px;}
   }
 </style>
 </head>
@@ -167,7 +158,7 @@
   <div class="header-right">
     <div class="sync-status">
       <div class="sync-dot" id="sync-dot"></div>
-      <span id="sync-label">Notion</span>
+      <span id="sync-label">Google Sheets</span>
     </div>
     <div class="header-tabs">
       <button class="tab-btn active" onclick="showTab('saisie',this)">Saisir</button>
@@ -213,15 +204,16 @@
           </div>
         </div>
       </div>
+
+      <!-- Ajout référence -->
       <div style="background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:13px;">
         <div style="font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:11px">Ajouter une référence</div>
         <div class="form-grid four" style="margin-bottom:11px">
           <div class="form-group"><label>Type de bijou</label>
             <select id="v-type">
               <option value="">Choisir</option>
-              <option>Boucles oreilles</option>
-              <option>Collier</option><option>Bracelet</option>
-              <option>Bague</option><option>Accessoire</option>
+              <option>Boucles d'oreilles</option><option>Collier</option>
+              <option>Bracelet</option><option>Bague</option><option>Accessoire</option>
             </select>
           </div>
           <div class="form-group"><label>Collection</label>
@@ -240,6 +232,8 @@
         </div>
         <button class="btn-sm" onclick="ajouterLignePanier()">+ Ajouter au panier</button>
       </div>
+
+      <!-- Panier -->
       <div class="panier">
         <div class="panier-title">Panier de la commande</div>
         <div id="panier-lignes"><div class="panier-empty">Aucune référence ajoutée</div></div>
@@ -248,7 +242,8 @@
           <span class="panier-total-val" id="panier-total-val">0 €</span>
         </div>
       </div>
-      <button class="btn-add" id="btn-valider" onclick="validerCommande()">Enregistrer dans Notion</button>
+
+      <button class="btn-add" id="btn-valider" onclick="validerCommande()">Enregistrer dans Google Sheets</button>
       <div class="flash" id="flash-vente"></div>
     </div>
   </div>
@@ -268,7 +263,7 @@
         <select id="f-collection" onchange="renderTable()"><option value="">Toutes les collections</option></select>
         <select id="f-type" onchange="renderTable()">
           <option value="">Tous les types</option>
-          <option>Boucles oreilles</option><option>Collier</option>
+          <option>Boucles d'oreilles</option><option>Collier</option>
           <option>Bracelet</option><option>Bague</option><option>Accessoire</option>
         </select>
         <input type="text" id="f-search" placeholder="Rechercher..." oninput="renderTable()" style="min-width:130px">
@@ -382,8 +377,8 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-title"><span class="dot"></span> Sauvegarde locale</div>
-      <p style="font-size:.81rem;color:var(--ink-soft);margin-bottom:13px">Les ventes sont dans Notion. Le catalogue (collections, revendeurs, événements) est sauvegardé localement ici.</p>
+      <div class="card-title"><span class="dot"></span> Sauvegarde catalogue</div>
+      <p style="font-size:.81rem;color:var(--ink-soft);margin-bottom:13px">Les ventes sont dans Google Sheets. Le catalogue est sauvegardé localement dans le navigateur.</p>
       <div style="display:flex;gap:9px;flex-wrap:wrap">
         <button class="btn-secondary" onclick="exportJSON()">Sauvegarder catalogue (JSON)</button>
         <button class="btn-secondary" onclick="document.getElementById('import-json').click()">Restaurer catalogue</button>
@@ -406,28 +401,24 @@
 
 <script>
 // ═══════════════════════════════════════
-// CONFIG NOTION
+// CONFIG
 // ═══════════════════════════════════════
-const NOTION_DB_ID = '168e2970-0c97-48c0-9f2f-4a09b233653b';
-const NOTION_DS_ID = '168e2970-0c97-48c0-9f2f-4a09b233653b';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzNah_YMUDLPHORhPAOk_dAn4HnhAvTydh2Ab2N1vpSzUpbZVhluiNUcYx2BxAdcYz0/exec';
+const STORAGE_KEY = 'sozo-catalogue-v2';
 
-// ═══════════════════════════════════════
-// ÉTAT LOCAL (catalogue uniquement)
-// ═══════════════════════════════════════
-const STORAGE_KEY = 'sozo-catalogue-v1';
 let catalogue = {
   bijoux: {},
   revendeurs: ['Vichy Mon Amour','SPL Vichy Destinations'],
-  evenements: ['En Mode Festi 2025','Festival Alice 2025'],
+  evenements: ['En Mode Festi 2025','Festival Alice 2025','Festival Alice 2026','Japan Event Clermont 2025'],
   collectionsPerma: []
 };
-let ventesNotion = []; // données chargées depuis Notion
+let ventesData = [];
 let panier = [];
 let deleteIndex = null;
 let activeCollTab = null;
 
 const MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-const CANAL_BADGE = {Shopify:'badge-shopify',Marketplace:'badge-marketplace',Revendeur:'badge-revendeur',Evenement:'badge-evenement',Custom:'badge-custom'};
+const CANAL_BADGE = {Shopify:'badge-Shopify',Marketplace:'badge-Marketplace',Revendeur:'badge-Revendeur',Evenement:'badge-Evenement',Custom:'badge-Custom'};
 const CANAUX_DIRECTS = ['Shopify','Marketplace','Evenement','Custom'];
 
 // ═══════════════════════════════════════
@@ -450,88 +441,49 @@ async function init() {
   await chargerVentes();
 }
 
-function saveCatalogue() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(catalogue));
-}
+function saveCatalogue() { localStorage.setItem(STORAGE_KEY, JSON.stringify(catalogue)); }
 
 function setSyncStatus(state, label) {
-  const dot = document.getElementById('sync-dot');
-  const lbl = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + state;
-  lbl.textContent = label;
+  document.getElementById('sync-dot').className = 'sync-dot ' + state;
+  document.getElementById('sync-label').textContent = label;
 }
-
 function showLoading(txt) {
   document.getElementById('loading-txt').textContent = txt || 'Chargement...';
   document.getElementById('loading').classList.add('show');
 }
-function hideLoading() {
-  document.getElementById('loading').classList.remove('show');
-}
+function hideLoading() { document.getElementById('loading').classList.remove('show'); }
 
 // ═══════════════════════════════════════
-// NOTION API via Anthropic
+// GOOGLE SHEETS API
 // ═══════════════════════════════════════
-async function callClaude(prompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      mcp_servers: [{
-        type: 'url',
-        url: 'https://mcp.notion.com/mcp',
-        name: 'notion-mcp'
-      }],
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  if (!res.ok) throw new Error('Erreur API');
-  return await res.json();
-}
-
 async function chargerVentes() {
-  setSyncStatus('loading', 'Chargement...');
-  showLoading('Chargement des ventes depuis Notion...');
+  setSyncStatus('loading','Chargement...');
+  showLoading('Chargement des ventes depuis Google Sheets...');
   try {
-    const data = await callClaude(
-      `Fetch all pages from the Notion database with ID ${NOTION_DB_ID}. 
-      Return ONLY a JSON array of objects with these exact fields: date, canal, sousCanal, typeRevendeur, typeBijou, collection, modele, coloris, qte, prix.
-      Map: Date→date (YYYY-MM-DD), Canal→canal, Sous-canal→sousCanal, Type revendeur→typeRevendeur, Type de bijou→typeBijou, Collection→collection, Modele→modele, Coloris→coloris, Quantite→qte (number), Prix unitaire→prix (number).
-      Return ONLY the JSON array, no other text.`
-    );
-    const text = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
-    const clean = text.replace(/```json|```/g,'').trim();
-    const startIdx = clean.indexOf('[');
-    const endIdx = clean.lastIndexOf(']');
-    if (startIdx !== -1 && endIdx !== -1) {
-      ventesNotion = JSON.parse(clean.slice(startIdx, endIdx+1));
-    }
-    setSyncStatus('ok', 'Notion ✓');
+    const res = await fetch(SHEET_URL);
+    const raw = await res.json();
+    // Ignorer la ligne d'en-tête
+    ventesData = raw.slice(1).filter(r => r[0] !== '').map(r => ({
+      date: r[0], canal: r[1], sousCanal: r[2], typeRevendeur: r[3],
+      typeBijou: r[4], collection: r[5], modele: r[6], coloris: r[7],
+      qte: parseFloat(r[8])||0, prix: parseFloat(r[9])||0
+    }));
+    setSyncStatus('ok','Google Sheets ✓');
     renderTable();
   } catch(e) {
-    setSyncStatus('error', 'Erreur sync');
+    setSyncStatus('error','Erreur connexion');
     console.error(e);
   }
   hideLoading();
 }
 
-async function envoyerVenteNotion(vente) {
-  const prompt = `Create a new page in the Notion database with ID ${NOTION_DB_ID} with these property values:
-  - Vente (title): "${vente.collection} · ${vente.modele}${vente.coloris?' · '+vente.coloris:''}"
-  - Date: "${vente.date}"
-  - Canal: "${vente.canal}"
-  - Sous-canal: "${vente.sousCanal||''}"
-  - Type revendeur: "${vente.typeRevendeur||''}"
-  - Type de bijou: "${vente.typeBijou||''}"
-  - Collection: "${vente.collection}"
-  - Modele: "${vente.modele}"
-  - Coloris: "${vente.coloris||''}"
-  - Quantite: ${vente.qte}
-  - Prix unitaire: ${vente.prix}
-  Confirm creation with "OK" when done.`;
-  return await callClaude(prompt);
+async function envoyerVente(vente) {
+  const res = await fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(vente)
+  });
 }
 
 // ═══════════════════════════════════════
@@ -557,7 +509,7 @@ function refreshCatalogue() {
 function populateColSelects() {
   const colls = Object.keys(catalogue.bijoux).sort();
   ['v-collection','cat-coll-select','cat-perma-select'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
+    const el=document.getElementById(id); if(!el) return;
     const v=el.value;
     el.innerHTML='<option value="">Choisir</option>';
     colls.forEach(c=>el.innerHTML+=`<option value="${c}">${c}</option>`);
@@ -658,31 +610,29 @@ async function validerCommande() {
   const btn=document.getElementById('btn-valider');
   btn.disabled=true;btn.textContent='Envoi en cours...';
   setSyncStatus('loading','Envoi...');
-
   const flash=document.getElementById('flash-vente');
   flash.className='flash';flash.style.display='none';
 
   try {
     for (const ligne of panier) {
       const vente={date,canal,sousCanal,typeRevendeur,...ligne};
-      await envoyerVenteNotion(vente);
-      ventesNotion.unshift(vente);
+      await envoyerVente(vente);
+      ventesData.unshift(vente);
     }
     panier=[];renderPanier();
     document.getElementById('v-canal').value='';
     document.getElementById('sous-canal-wrap').style.display='none';
-    setSyncStatus('ok','Notion ✓');
-    flash.textContent='✓ Commande enregistrée dans Notion !';
+    setSyncStatus('ok','Google Sheets ✓');
+    flash.textContent='✓ Commande enregistrée dans Google Sheets !';
     flash.className='flash success show';
     setTimeout(()=>flash.classList.remove('show'),3000);
     renderTable();
   } catch(e) {
     setSyncStatus('error','Erreur');
-    flash.textContent='⚠ Erreur lors de l\'envoi. Réessaie.';
+    flash.textContent='⚠ Erreur lors de l\'envoi. Vérifie ta connexion.';
     flash.className='flash error show';
-    setTimeout(()=>flash.classList.remove('show'),4000);
   }
-  btn.disabled=false;btn.textContent='Enregistrer dans Notion';
+  btn.disabled=false;btn.textContent='Enregistrer dans Google Sheets';
 }
 
 // ═══════════════════════════════════════
@@ -691,7 +641,7 @@ async function validerCommande() {
 function renderTable() {
   const fc=document.getElementById('f-canal').value,fcoll=document.getElementById('f-collection').value;
   const ftype=document.getElementById('f-type').value,fs=(document.getElementById('f-search').value||'').toLowerCase();
-  const ventes=ventesNotion.filter(v=>{
+  const ventes=ventesData.filter(v=>{
     if(fc&&v.canal!==fc)return false;if(fcoll&&v.collection!==fcoll)return false;
     if(ftype&&v.typeBijou!==ftype)return false;
     if(fs&&![v.collection,v.modele,v.coloris,v.sousCanal,v.typeBijou].join(' ').toLowerCase().includes(fs))return false;
@@ -701,7 +651,7 @@ function renderTable() {
   if(!ventes.length){tbody.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   tbody.innerHTML=ventes.map(v=>{
-    const total=(v.qte*v.prix).toFixed(2);
+    const total=((v.qte||0)*(v.prix||0)).toFixed(2);
     return`<tr>
       <td>${fmt(v.date)}</td>
       <td><span class="badge ${CANAL_BADGE[v.canal]||''}">${v.canal}</span></td>
@@ -716,10 +666,15 @@ function renderTable() {
   }).join('');
 }
 
-function fmt(d){if(!d)return'—';try{const[y,m,j]=d.split('-');return`${j}/${m}/${y}`;}catch{return d;}}
-
-function askDelete(i){deleteIndex=i;document.getElementById('modal-del').classList.add('open');}
-function closeModal(){deleteIndex=null;document.getElementById('modal-del').classList.remove('open');}
+function fmt(d){
+  if(!d)return'—';
+  try{
+    const str=String(d);
+    if(str.includes('-')){const[y,m,j]=str.split('-');return`${j}/${m}/${y}`;}
+    return str;
+  }catch{return String(d);}
+}
+function closeModal(){document.getElementById('modal-del').classList.remove('open');}
 function confirmDelete(){closeModal();}
 
 // ═══════════════════════════════════════
@@ -735,7 +690,10 @@ function applyShortcut(val){
 function resetPeriode(){['s-debut','s-fin'].forEach(id=>document.getElementById(id).value='');document.getElementById('s-canal').value='';renderStats();}
 function getFiltered(){
   const d=document.getElementById('s-debut').value,f=document.getElementById('s-fin').value,c=document.getElementById('s-canal').value;
-  return ventesNotion.filter(v=>{if(d&&v.date<d)return false;if(f&&v.date>f)return false;if(c&&v.canal!==c)return false;return true;});
+  return ventesData.filter(v=>{
+    const ds=String(v.date||'').substring(0,10);
+    if(d&&ds<d)return false;if(f&&ds>f)return false;if(c&&v.canal!==c)return false;return true;
+  });
 }
 
 // ═══════════════════════════════════════
@@ -751,11 +709,13 @@ function renderStats(){
   directes.forEach(v=>{const k=`${v.date}|${v.canal}|${v.sousCanal}`;commandes[k]=(commandes[k]||0)+(v.qte||0)*(v.prix||0);});
   const vals=Object.values(commandes);
   const avgPanier=vals.length?(vals.reduce((s,n)=>s+n,0)/vals.length).toFixed(0):0;
+
   document.getElementById('stats-cards').innerHTML=`
     <div class="stat-card"><div class="stat-val">${totalPieces}</div><div class="stat-lbl">Pièces vendues</div></div>
     <div class="stat-card"><div class="stat-val">${totalCA.toFixed(0)} €</div><div class="stat-lbl">Chiffre d'affaires</div></div>
     <div class="stat-card"><div class="stat-val">${refs}</div><div class="stat-lbl">Références actives</div></div>
     <div class="stat-card"><div class="stat-val">${avgPanier} €</div><div class="stat-lbl">Panier moyen</div><div class="stat-sub">ventes directes</div></div>`;
+
   const types={};ventes.forEach(v=>{if(v.typeBijou)types[v.typeBijou]=(types[v.typeBijou]||0)+(v.qte||0);});
   renderBar('chart-types',types,'var(--sage)');
   const canaux={};ventes.forEach(v=>{if(v.canal)canaux[v.canal]=(canaux[v.canal]||0)+(v.qte||0);});
@@ -771,7 +731,7 @@ function renderStats(){
   const revs={};ventes.filter(v=>v.canal==='Revendeur').forEach(v=>{const k=v.sousCanal||'Non précisé';revs[k]=(revs[k]||0)+(v.qte||0);});
   renderBar('chart-revendeurs',revs,'#7C907099');
   const parMois=Array(12).fill(0);
-  ventes.forEach(v=>{if(v.date){try{const m=parseInt(v.date.split('-')[1])-1;parMois[m]+=(v.qte||0);}catch{}}});
+  ventes.forEach(v=>{if(v.date){try{const m=parseInt(String(v.date).split('-')[1])-1;if(m>=0&&m<12)parMois[m]+=(v.qte||0);}catch{}}});
   const maxM=Math.max(...parMois,1);
   document.getElementById('chart-mois').innerHTML=parMois.map((n,i)=>`
     <div class="month-cell"><div class="month-bar-wrap">
