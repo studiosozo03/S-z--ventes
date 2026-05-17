@@ -403,7 +403,7 @@
 // ═══════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycby7vCgW4S8n875QwFZEhwVkoxIyo9gAHoSXFLvnHKQEBBNtWGnFLhhVQb1IieQ6j9A3/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyLBopjJOy4RScmkJfJ1RwR-LoZjJu19rEkPDyp-qmZnnLi3ih_pwY9Qv65ZLsBhnKV/exec';
 const STORAGE_KEY = 'sozo-catalogue-v2';
 
 let catalogue = {
@@ -466,7 +466,8 @@ async function chargerVentes() {
     ventesData = raw.slice(1).filter(r => r[0] !== '').map(r => ({
       date: r[0], canal: r[1], sousCanal: r[2], typeRevendeur: r[3],
       typeBijou: r[4], collection: r[5], modele: r[6], coloris: r[7],
-      qte: parseFloat(r[8])||0, prix: parseFloat(r[9])||0
+      qte: parseFloat(r[8])||0, prix: parseFloat(r[9])||0,
+      cmdId: r[12]||''
     }));
     setSyncStatus('ok','Google Sheets ✓');
     renderTable();
@@ -607,6 +608,11 @@ async function validerCommande() {
   else if(canal==='Evenement') sousCanal=document.getElementById('v-evenement').value;
   else if(canal==='Marketplace') sousCanal=document.getElementById('v-marketplace').value;
 
+  // Génération automatique du numéro de commande
+  const dateStr = date.replace(/-/g,'');
+  const cmdNum = String(Date.now()).slice(-4);
+  const cmdId = `CMD-${dateStr}-${cmdNum}`;
+
   const btn=document.getElementById('btn-valider');
   btn.disabled=true;btn.textContent='Envoi en cours...';
   setSyncStatus('loading','Envoi...');
@@ -615,7 +621,7 @@ async function validerCommande() {
 
   try {
     for (const ligne of panier) {
-      const vente={date,canal,sousCanal,typeRevendeur,...ligne};
+      const vente={date,canal,sousCanal,typeRevendeur,cmdId,...ligne};
       await envoyerVente(vente);
       ventesData.unshift(vente);
     }
@@ -706,7 +712,11 @@ function renderStats(){
   const refs=new Set(ventes.map(v=>[v.collection,v.modele,v.coloris].filter(Boolean).join('·'))).size;
   const directes=ventes.filter(v=>CANAUX_DIRECTS.includes(v.canal));
   const commandes={};
-  directes.forEach(v=>{const k=`${v.date}|${v.canal}|${v.sousCanal}`;commandes[k]=(commandes[k]||0)+(v.qte||0)*(v.prix||0);});
+  directes.forEach(v=>{
+    // Utilise le numéro de commande si disponible, sinon date+canal+sousCanal
+    const k = v.cmdId || `${v.date}|${v.canal}|${v.sousCanal}`;
+    commandes[k]=(commandes[k]||0)+(v.qte||0)*(v.prix||0);
+  });
   const vals=Object.values(commandes);
   const avgPanier=vals.length?(vals.reduce((s,n)=>s+n,0)/vals.length).toFixed(0):0;
 
